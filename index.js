@@ -99,6 +99,7 @@ const resolvers = {
                 });
         },
         updateBerita: (parent, {
+            id,
             judul,
             author,
             image,
