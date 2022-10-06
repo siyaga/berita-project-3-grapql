@@ -1,0 +1,37 @@
+  type Berita {
+    id: Int
+    judul: String
+    author: String
+    image: String
+    artikel: String
+  }
+  type Komentar {
+    id: Int
+    idberita: String
+    username: String
+    komentar: String
+  }
+    type User {
+    id: Int 
+    nama: String
+    email: String
+    username: String
+    password: String
+  }
+ type Token {
+    token: String
+    expired: String
+  }
+  type Query {
+    beritas : [Berita]
+    users: [User]
+  }
+  type Mutation {
+    createBerita(judul: String, author:String, image:String, artikel:String): Berita,
+    createKomentar(idberita:Int, username:String, komentar:String): Komentar,
+    getBerita(id:Int): Berita,
+    updateBerita(judul: String, author:String, image:String, artikel:String): Berita,
+    deleteBerita(id:Int): Berita,
+    register(name: String, email: String, username: String, password: String): User,
+    login(username: String, password: String): Token
+  }
