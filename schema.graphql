@@ -5,9 +5,16 @@
     image: String
     artikel: String
   }
-  type Komentar {
+  type DetailBerita {
     id: Int
-    idberita: String
+    judul: String
+    author: String
+    image: String
+    artikel: String
+  }
+  type Komentars {
+    id: Int
+    idberita: Int
     username: String
     komentar: String
   }
@@ -24,14 +31,15 @@
   }
   type Query {
     beritas : [Berita]
+    komentars : [Komentars]
     users: [User]
+    getBerita(id:Int): DetailBerita
   }
   type Mutation {
     createBerita(judul: String, author:String, image:String, artikel:String): Berita,
-    createKomentar(idberita:Int, username:String, komentar:String): Komentar,
-    getBerita(id:Int): Berita,
-    updateBerita(id:Int, judul: String, author:String, image:String, artikel:String): Berita,
+    createKomentar(idberita:Int, username:String, komentar:String): Komentars,
+    updateBerita(id:Int, judul: String, author:String, image:String, artikel:String ): Berita,
     deleteBerita(id:Int): Berita,
-    register(name: String, email: String, username: String, password: String): User,
+    register(nama: String, email: String, username: String, password: String): User,
     login(username: String, password: String): Token
   }

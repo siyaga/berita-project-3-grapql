@@ -22,7 +22,7 @@ db.beritas = require('./berita')(sequelize, Sequelize);
 db.komentars = require('./komentar')(sequelize, Sequelize);
 db.users = require('./user')(sequelize, Sequelize);
 
-db.beritas.hasMany(db.komentars, {as: "komentars"});
+db.beritas.hasMany(db.komentars, {foreignKey:'idberita',as: "komentars"});
 db.komentars.belongsTo(db.beritas,{foreignKey:'idberita'});
 
 

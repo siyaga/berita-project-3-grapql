@@ -32,10 +32,21 @@ const resolvers = {
                     return [];
                 });
         },
+        komentars: async () => {
+            return Komentars.findAll({
+                attributes: ['id','idberita','username', 'komentar','createdAt']
+              })
+                .then(komentar => {
+                    return komentar;
+                })
+                .catch(err => {
+                    return [];
+                });
+        },
         users: (parent, args, context) => {
-            if (!context.user) throw new AuthenticationError('you must be logged in');
+            if (!context.data) throw new AuthenticationError('you must be logged in');
             else
-                return Users.findAll()
+                return Users.findAll({attributes:['id','nama','email','username']})
                     .then(users => {
                         return users;
                     })
@@ -43,21 +54,41 @@ const resolvers = {
                         return [];
                     });
         },
+        getBerita: (parent, { id }) => {
+            var id = id;
+               
+           
+            return Beritas.findOne({where:{id:id}})
+                .then(berita => {
+                    return berita;
+                })
+                .catch(err => {
+                    return {};
+                });
+        },
+        
     },
     Mutation: {
+        
         createBerita: (parent, {
             judul,
             author,
             image,
             artikel
-        }) => {
-            
-            let berita = {
+        },context) => {
+            if (!context.data) throw new AuthenticationError('you must be logged in');
+            else    
+            var berita = {
                 judul: judul,
                 author: author,
                 image: image,
                 artikel: artikel
             }
+
+            
+            
+            
+           
             return Beritas.create(berita)
                 .then(data => {
                     return data;
@@ -71,6 +102,7 @@ const resolvers = {
             komentar,
             username,
         }) => {
+
             
             let komen = {
                 idberita: idberita,
@@ -85,27 +117,17 @@ const resolvers = {
                     return {};
                 });
         },
-        getBerita: (parent, {
-            id
-        }) => {
-            const idd = id;
-            return Beritas.findByPk(idd,{
-                attributes: ['id', 'judul', 'author','image','artikel','createdAt']})
-                .then(data => {
-                    return data;
-                })
-                .catch(err => {
-                    return {};
-                });
-        },
+     
         updateBerita: (parent, {
             id,
             judul,
             author,
             image,
             artikel
-        }) => {
-            const berita = {
+        },context) => {
+            if (!context.data) throw new AuthenticationError('you must be logged in');
+            else
+            var berita = {
                 judul: judul,
                 author: author,
                 image: image,
@@ -131,7 +153,9 @@ const resolvers = {
         },
         deleteBerita: (parent, {
             id
-        }) => {
+        },context) => {
+            if (!context.data) throw new AuthenticationError('you must be logged in');
+            else
 
             return Beritas.findByPk(id)
                 .then(data => {
@@ -250,8 +274,8 @@ const server = new ApolloServer({
         const token = req.headers.authorization || '';
         if (token) {
             // extract
-            let payload = jwt.verify(token, config.pubkey)
-            Users.findByPk(payload.userid)
+            var payload = jwt.verify(token, config.secret)
+            return Users.findByPk(payload.userid)
                 .then(data => {
                     if (data) {
                         return {
